@@ -1,4 +1,7 @@
 from datetime import date
+import matplotlib.pyplot as plt
+import numpy as np
+
 
 class User():
     def __init__(self, id:int, user_name:str, balance:float):
@@ -29,9 +32,13 @@ class User():
     def add_to_balance(self, newBalance:int):
         self.balance = self.balance + newBalance
 
-    def plot_order_history(self,):
+    def plot_order_history(self,dates):
+        products=len(self.products_in_car)
 
-        pass
+        dates = np.array([2, 8])
+
+        plt.plot(dates, products)
+        return plt.show()
 
 
 class Order():
@@ -94,3 +101,6 @@ print(product2)
 
 product2.update_price((8,22,2022),8000)
 print(product2)
+
+user3.plot_order_history
+
