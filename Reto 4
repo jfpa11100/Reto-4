@@ -1,38 +1,46 @@
+from datetime import date
+
 class User():
-    def __init__(self, id, user_name, balance):
+    def __init__(self, id:int, user_name:str, balance:float):
         self.user_name = user_name
         self.id = id
         self.balance = balance
-        self.order_list = []
+        self.orders_list = []
+        self.products_in_car = []
 
     def __str__(self):
         txt = "User name: {0} - id: {1} - balance: {2} - order: {3}"
         return txt.format(self.user_name, self.id, self.balance, self.order_list)
 
 
-    def add_product_to_car(self, product):
-        pass
+    def add_product_to_car(self, products):
+        for i in range(len(products)):
+            self.products_in_car.append(products[i])
 
     def consolidate_order(self, id, date, status:bool):
-        total=0  
+        total=0
+        for i in range(len(self.products_in_car)):
+            total=self.products_in_car[i].price + total
 
-        newOrder=Order()
-        pass
+        newOrder=Order(id, date, total, status, self.products_in_car)
+        self.orders_list.append(newOrder)
+        
 
-    def add_to_balance(self,):
-        pass
+    def add_to_balance(self, newBalance:int):
+        self.balance = self.balance + newBalance
 
     def plot_order_history(self,):
+
         pass
 
 
 class Order():
-    def __init__(self, id, date, total, status:bool):
+    def __init__(self, id:int, date:date, total:float, status:bool,products_list=[]):
         self.id = id
-        self.product_list = []
         self.date = date
         self.total = total
         self.status = status
+        self.products_list = products_list
 
     def __str__(self):
         txt = "Order id: {0} - product list: ({1}) - date: {2} - total: {3} - status: {4}"
@@ -43,26 +51,46 @@ class Product():
         self.name:str = name
         self.id:int = id
         self.price:float = price
-        self.price_history={"date":price}
+        self.price_history={}
 
     def __str__(self):
-        txt = "Product name: {0} - id: ({1}) - price: {2} - price_history: {3}"
+        txt = "Product id: {0} - name: {1} - price: {2} - price_history: {3}"
         return txt.format(self.name, self.id, self.price, self.price_history)
 
-    def update_price(self, new_price:float):
+    def update_price(self, date, new_price:float):
+        self.price_history[date] = self.price
         self.price = new_price
 
 
-user1 = User("Pablo", 1111, 30.5)
-user2 = User("Jessica", 2222, 39.4)
-user3 = User("Carlos", 3333, 32.7)
-user4 = User("Juanita", 4444, 42.9)
+user1 = User("Pablo", 1111, 50000)
+user2 = User("Jessica", 2222, 60000)
+user3 = User("Carlos", 3333, 75000)
+user4 = User("Juanita", 4444, 80000)
 
-product1 = Product("papas", 1, 2000)
+product1 = Product("papas", 1, 2300)
 product2 = Product("Aceite", 2, 5500)
 product3 = Product("Gaseosa", 3, 2000)
-product4 = Product("Arroz", 4, 2000)
-product5 = Product("Hamburguesa", 5, 2000)
-product6 = Product("Shampoo", 6, 2000)
+product4 = Product("Arroz", 4, 6000)
+product5 = Product("Hamburguesa", 5, 11000)
+product6 = Product("Shampoo", 6, 5000)
+
+user1.add_product_to_car([product1, product3, product4])
+user3.add_product_to_car([product4, product5, product6])
 
 user1.consolidate_order(1, "22/08/2022", True)
+user3.consolidate_order(2, "23/08/2022", True)
+
+print(user1.orders_list[0].total)
+print(user3.orders_list[0].total)
+
+
+print(user2.balance)
+user2.add_to_balance(10000)
+print(user2.balance)
+
+product2.update_price((7,22,2022), 7000)
+print(product2)
+
+
+product2.update_price((8,22,2022),8000)
+print(product2)
