@@ -32,12 +32,13 @@ class User():
     def add_to_balance(self, newBalance:int):
         self.balance = self.balance + newBalance
 
-    def plot_order_history(self,dates):
-        products=len(self.products_in_car)
+    def plot_order_history(self):
 
-        dates = np.array([2, 8])
+        xpoints = np.array([len(self.orders_list), 8])
+        ypoints = np.array([2, 10])
 
-        plt.plot(dates, products)
+        plt.plot(xpoints, ypoints)
+        
         return plt.show()
 
 
@@ -102,5 +103,4 @@ print(product2)
 product2.update_price((8,22,2022),8000)
 print(product2)
 
-user3.plot_order_history
-
+user3.plot_order_history()
