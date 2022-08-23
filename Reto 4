@@ -27,6 +27,7 @@ class User():
 
         newOrder=Order(id, date, total, status, self.products_in_car)
         self.orders_list.append(newOrder)
+        self.products_in_car=[]
         
 
     def add_to_balance(self, newBalance:int):
@@ -34,10 +35,10 @@ class User():
 
     def plot_order_history(self):
 
-        xpoints = np.array([len(self.orders_list), 8])
-        ypoints = np.array([2, 10])
+        xpoints = np.array([0, 0])
+        ypoints = np.array([len(self.orders_list), len(user1.orders_list[0].products_list)])
 
-        plt.plot(xpoints, ypoints)
+        plt.plot(xpoints, ypoints, 'o')
         
         return plt.show()
 
@@ -52,7 +53,7 @@ class Order():
 
     def __str__(self):
         txt = "Order id: {0} - product list: ({1}) - date: {2} - total: {3} - status: {4}"
-        return txt.format(self.id, self.product_list, self.date, self.total, self.status)
+        return txt.format(self.id, self.products_list, self.date, self.total, self.status)
 
 class Product():
     def __init__(self, id:int, name:str, price:float):
@@ -83,10 +84,13 @@ product5 = Product("Hamburguesa", 5, 11000)
 product6 = Product("Shampoo", 6, 5000)
 
 user1.add_product_to_car([product1, product3, product4])
-user3.add_product_to_car([product4, product5, product6])
-
 user1.consolidate_order(1, "22/08/2022", True)
+
+user3.add_product_to_car([product4, product5, product6])
 user3.consolidate_order(2, "23/08/2022", True)
+
+user1.add_product_to_car([product4, product1, product3])
+user1.consolidate_order(3,"24/08/2022", True)
 
 print(user1.orders_list[0].total)
 print(user3.orders_list[0].total)
