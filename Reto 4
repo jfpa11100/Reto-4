@@ -25,9 +25,12 @@ class User():
         for i in range(len(self.products_in_car)):
             total=self.products_in_car[i].price + total
 
-        newOrder=Order(id, date, total, status, self.products_in_car)
-        self.orders_list.append(newOrder)
-        self.products_in_car=[]
+        if self.balance >= total:
+            newOrder=Order(id, date, total, status, self.products_in_car)
+            self.orders_list.append(newOrder)
+            self.products_in_car=[]
+        else:
+            print("Insufficient Balance")
         
 
     def add_to_balance(self, newBalance:int):
