@@ -1,7 +1,6 @@
 from datetime import date
-import matplotlib.pyplot as plt
 import numpy as np
-
+import matplotlib.pyplot as plt
 
 class User():
     def __init__(self, id:int, user_name:str, balance:float):
@@ -19,40 +18,42 @@ class User():
     def add_product_to_car(self, products):
         for i in range(len(products)):
             self.products_in_car.append(products[i])
+        print("Productos añadidos al carro")
 
-    def consolidate_order(self, id, date, status:bool):
+    def consolidate_order(self, id, status:bool):
         total=0
         for i in range(len(self.products_in_car)):
             total=self.products_in_car[i].price + total
 
         if self.balance >= total:
-            newOrder=Order(id, date, total, status, self.products_in_car)
+            newOrder=Order(id, date.today(), total, status, self.products_in_car)
             self.orders_list.append(newOrder)
-            self.products_in_car=[]
+            self.products_in_car.clear()
+            self.balance -= total
         else:
             print("Insufficient Balance")
         
 
-    def add_to_balance(self, newBalance:int):
-        self.balance = self.balance + newBalance
+    def add_to_balance(self, addBalance:int):
+        self.balance += addBalance
 
     def plot_order_history(self):
 
-        xpoints = np.array([0, 0])
-        ypoints = np.array([len(self.orders_list), len(user1.orders_list[0].products_list)])
+        x = np.array([i.date for i in self.orders_list])
+        y = np.array([i.total for i in self.orders_list])
 
-        plt.plot(xpoints, ypoints, 'o')
+        plt.plot(x, y)
         
         return plt.show()
 
 
 class Order():
-    def __init__(self, id:int, date:date, total:float, status:bool,products_list=[]):
+    def __init__(self, id:int, date:date, total:float, status:bool, prodList):
         self.id = id
         self.date = date
         self.total = total
         self.status = status
-        self.products_list = products_list
+        self.products_list = prodList
 
     def __str__(self):
         txt = "Order id: {0} - product list: ({1}) - date: {2} - total: {3} - status: {4}"
@@ -74,7 +75,7 @@ class Product():
         self.price = new_price
 
 
-user1 = User("Pablo", 1111, 50000)
+user1 = User("Pablo", 1111, 1000000)
 user2 = User("Jessica", 2222, 60000)
 user3 = User("Carlos", 3333, 75000)
 user4 = User("Juanita", 4444, 80000)
@@ -87,13 +88,16 @@ product5 = Product("Hamburguesa", 5, 11000)
 product6 = Product("Shampoo", 6, 5000)
 
 user1.add_product_to_car([product1, product3, product4])
-user1.consolidate_order(1, "22/08/2022", True)
+user1.consolidate_order(1, True)
 
 user3.add_product_to_car([product4, product5, product6])
-user3.consolidate_order(2, "23/08/2022", True)
+user3.consolidate_order(2, True)
 
 user1.add_product_to_car([product4, product1, product3])
-user1.consolidate_order(3,"24/08/2022", True)
+user1.consolidate_order(3, True)
+
+user1.add_product_to_car([product2, product1, product4])
+user1.consolidate_order(4, True)
 
 print(user1.orders_list[0].total)
 print(user3.orders_list[0].total)
@@ -110,4 +114,4 @@ print(product2)
 product2.update_price((8,22,2022),8000)
 print(product2)
 
-user3.plot_order_history()
+user1.plot_order_history()
